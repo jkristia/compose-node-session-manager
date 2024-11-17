@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            // https://code.visualstudio.com/docs/containers/debug-common
+            // generated using 'Docker: Initialize for Docker debugging'
+            // https://code.visualstudio.com/docs/containers/debug-node
+            "name": "Docker manager Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node",
+            "node": {
+                "package": "${workspaceFolder}/session-manager/package.json",
+                "localRoot": "${workspaceFolder}/session-manager"
+            }
+        }
+    ]
+}
