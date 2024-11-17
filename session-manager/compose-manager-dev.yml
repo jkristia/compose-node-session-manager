@@ -8,9 +8,15 @@ services:
     build:
       context: .
       dockerfile: dockerfile-dev
-    image: manager:latest
+    image: manager-dev:latest
+    volumes:
+      - .:/app
+
     ports:
       - 8080:8080
       - 9229:9229
-    command: node --inspect=0.0.0.0:9229 --nolazy session-manager.js
+    command: node --inspect=0.0.0.0:9229 --nolazy ./.dist/session-manager.js
+
+# docker run --rm --name manager-dev -p 9229:9229 -v .:/app manager-dev node --inspect=0.0.0.0:9229 --nolazy ./.dist/session-manager.js
+
 

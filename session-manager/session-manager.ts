@@ -34,7 +34,7 @@ process.on('SIGTERM', function() {
 const app = express();
 const port = 8080;
 
-const XYZ = '#6'
+const XYZ = '#7'
 
 app.get('/', (req, res) => {
     console.log(`${new Date().toLocaleTimeString()} - request - ${XYZ}`)
