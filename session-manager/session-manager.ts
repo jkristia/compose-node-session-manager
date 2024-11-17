@@ -22,12 +22,17 @@
 
 import express from 'express';
 
+process.on('SIGINT', function() {
+    console.log("CTRL-C: will terminate");
+    process.exit();
+});
+
 const app = express();
 const port = 8080;
 
 app.get('/', (req, res) => {
     console.log(`${new Date().toLocaleTimeString()} - request`)
-    res.send('Hello');
+    res.send(`${new Date().toLocaleTimeString()} - Hello #1`);
 });
 
 app.listen(port, () => {

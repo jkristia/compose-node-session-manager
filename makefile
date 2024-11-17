@@ -4,6 +4,9 @@ help:
 PHONY: build-image
 build-image: .build-image	## build image
 
+PHONY: run-manager
+run-manager: .build-session-manager ## run manager container
+	docker run -p 8080:8080 --rm --name manager session-manager
 
 .build-session:
 	cd session && \

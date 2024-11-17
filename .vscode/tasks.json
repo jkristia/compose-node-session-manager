@@ -36,6 +36,7 @@
 					"DEBUG": "*",
 					"NODE_ENV": "development"
 				},
+				"options": [ "--inspect=0.0.0.0:9229" ],
 			},
 			"node": {
 				"package": "${workspaceFolder}/session-manager/package.json",
