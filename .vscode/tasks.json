@@ -43,17 +43,5 @@
 				"enableDebugging": true
 			}
 		},
-		{
-			"label": "Run Manager Container",
-			"type": "shell",
-			"command": "docker run -p 8080:8080 -p 9229:9229 --rm --name manager session-manager",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"problemMatcher": [],
-			"dependsOn": [],
-			"detail": "Runs the Docker container with port mapping"
-		}
 	]
 }

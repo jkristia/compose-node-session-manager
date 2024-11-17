@@ -26,7 +26,6 @@
                 "localRoot": "${workspaceFolder}/session-manager",
                 "remoteRoot": "./"
             },
-            "portMappings": [ { "localPort": 3000, "containerPort": 3000 } ],
         }
     ]
 }
