@@ -7,4 +7,4 @@ COPY .dist .
 
 EXPOSE 8080
 
-CMD ["node", "session-manager.js"]
+CMD ["node", "--inspect=0.0.0.0:9229", "session-manager.js"]

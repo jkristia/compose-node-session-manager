@@ -1,18 +1,32 @@
 {
     "configurations": [
         {
+            // manually build and launch the container
+            // make run-manager
+            // then attach
+            "type": "node",
+            "request": "attach",
+            "name": "Docker: attach manager",
+            "port": 9229,
+            "address": "localhost",
+            "localRoot": "${workspaceFolder}/session-manager"            ,
+            "remoteRoot": "./",
+        },
+        {
             // https://code.visualstudio.com/docs/containers/debug-common
             // generated using 'Docker: Initialize for Docker debugging'
             // https://code.visualstudio.com/docs/containers/debug-node
-            "name": "Docker manager Launch",
+            "name": "Docker launch manager",
             "type": "docker",
             "request": "launch",
             "preLaunchTask": "docker-run: debug",
             "platform": "node",
             "node": {
                 "package": "${workspaceFolder}/session-manager/package.json",
-                "localRoot": "${workspaceFolder}/session-manager"
-            }
+                "localRoot": "${workspaceFolder}/session-manager",
+                "remoteRoot": "./"
+            },
+            "portMappings": [ { "localPort": 3000, "containerPort": 3000 } ],
         }
     ]
 }

@@ -5,17 +5,17 @@ PHONY: build-image
 build-image: .build-image	## build image
 
 PHONY: run-manager
-run-manager: .build-session-manager ## run manager container
-	docker run -p 8080:8080 --rm --name manager session-manager
+run-manager: .build-session-manager-dev ## run manager container
+	docker run -p 8080:8080 -p 9229:9229 --rm --name manager session-manager
 
 .build-session:
 	cd session && \
 	tsc && \
 	docker build -t session . 
 
-.build-session-manager:
+.build-session-manager-dev:
 	cd session-manager && \
 	npm run build && \
-	docker build -t session-manager . 
+	docker build -f dockerfile-dev -t session-manager . 
 
-.build-image: .build-session .build-session-manager
+.build-image: .build-session .build-session-manager-dev

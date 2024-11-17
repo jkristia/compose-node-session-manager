@@ -6,7 +6,7 @@
 			"label": "docker-build",
 			"platform": "node",
 			"dockerBuild": {
-				"dockerfile": "${workspaceFolder}/session-manager/Dockerfile",
+				"dockerfile": "${workspaceFolder}/session-manager/dockerfile-dev",
 				"context": "${workspaceFolder}/session-manager",
 				"pull": true
 			},
@@ -36,12 +36,24 @@
 					"DEBUG": "*",
 					"NODE_ENV": "development"
 				},
-				"options": [ "--inspect=0.0.0.0:9229" ],
+				"command": "node --inspect=0.0.0.0:9229 session-manager.js",
 			},
 			"node": {
 				"package": "${workspaceFolder}/session-manager/package.json",
 				"enableDebugging": true
 			}
+		},
+		{
+			"label": "Run Manager Container",
+			"type": "shell",
+			"command": "docker run -p 8080:8080 -p 9229:9229 --rm --name manager session-manager",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"dependsOn": [],
+			"detail": "Runs the Docker container with port mapping"
 		}
 	]
 }

@@ -30,9 +30,11 @@ process.on('SIGINT', function() {
 const app = express();
 const port = 8080;
 
+const XYZ = '#4'
+
 app.get('/', (req, res) => {
-    console.log(`${new Date().toLocaleTimeString()} - request`)
-    res.send(`${new Date().toLocaleTimeString()} - Hello #1`);
+    console.log(`${new Date().toLocaleTimeString()} - request - ${XYZ}`)
+    res.send(`${new Date().toLocaleTimeString()} - Hello - ${XYZ}`);
 });
 
 app.listen(port, () => {
