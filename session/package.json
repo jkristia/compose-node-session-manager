@@ -4,5 +4,8 @@
   },
   "dependencies": {
     "dockerode": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0"
   }
 }
