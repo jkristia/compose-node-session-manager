@@ -1,0 +1,16 @@
+version: '3.4'
+
+# https://code.visualstudio.com/docs/containers/docker-compose
+
+services:
+
+  session:
+    extends:
+      file: ./session/compose-session-dev.yml
+      service: session
+
+  manager:
+    extends:
+      file: ./session-manager/compose-manager-dev.yml
+      service: manager
+
