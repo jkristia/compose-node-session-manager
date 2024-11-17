@@ -1,0 +1,16 @@
+# BUILD
+# docker compose -f compose-manager-dev.yml up --build
+# ATTACH
+# select 'manager attach' and run
+services:
+  manager:
+    container_name: manager-dev
+    build:
+      context: .
+      dockerfile: dockerfile-dev
+    image: manager:latest
+    ports:
+      - 8080:8080
+      - 9229:9229
+    command: node --inspect=0.0.0.0:9229 --nolazy session-manager.js
+
