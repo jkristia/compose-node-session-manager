@@ -1,6 +1,6 @@
 
 # BUILD
-# docker compose -f compose-manager-dev.yml up --build
+# docker compose -f compose-session-dev.yml up --build
 # ATTACH
 # select 'manager attach' and run
 services:
@@ -9,8 +9,16 @@ services:
     build:
       context: .
       dockerfile: dockerfile-dev
-    image: session:latest
+    image: session-dev:latest
+    volumes:
+      - .:/app
+
     ports:
       - 9230:9229
-    command: node --inspect=0.0.0.0:9229 --nolazy session.js
+    command: node --inspect=0.0.0.0:9229 --nolazy ./.dist/session.js
 
+# docker run -it --rm -v ./node_modules:/app/node_modules -v ./.dist:/app session-dev bash
+# docker run -it --rm -v ./dist:/app session-dev bash
+# docker run --rm -p 9230:9229 -v ./node_modules:/app/node_modules -v ./.dist:/app session-dev node --inspect=0.0.0.0:9229 --nolazy session.js
+# docker run --rm --name hey -p 9230:9229 -v .:/app -v ./node_modules:/app/node_modules -v ./.dist:/app/dist session-dev node --inspect=0.0.0.0:9229 --nolazy ./dist/session.js
+# docker run --rm --name hey -p 9230:9229 -v .:/app session-dev node --inspect=0.0.0.0:9229 --nolazy ./.dist/session.js

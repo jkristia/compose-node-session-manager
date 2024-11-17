@@ -13,16 +13,13 @@
             "remoteRoot": "./",
         },
         {
-            // manually build and launch the container
-            // make run-manager
-            // then attach
             "type": "node",
             "request": "attach",
             "name": "session attach",
             "port": 9230,
             "address": "localhost",
             "localRoot": "${workspaceFolder}/session",
-            "remoteRoot": "./",
+            "remoteRoot": "/app",
         },
 
 

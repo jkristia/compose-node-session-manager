@@ -1,8 +1,8 @@
 FROM node:18
 
 WORKDIR /app
-COPY package*.json .
-RUN npm install --production
-COPY .dist .
+# COPY package*.json .
+# RUN npm install --production
+# COPY .dist .
 
-CMD ["node", "--inspect=0.0.0.0:9229", "session.js"]
+# CMD ["node", "--inspect=0.0.0.0:9229", "session.js"]

@@ -1,5 +1,7 @@
+import { FooA } from "./foo-a";
 
 class Session {
+    private _cnt = 1;
     constructor(private _id: string) {
 
     }
@@ -13,6 +15,8 @@ class Session {
         }
         while (true) {
             console.log(`${new Date().toLocaleTimeString()} Session: ${this._id}`)
+            const f = new FooA(this._cnt.toString())
+            this._cnt++;
             await sleep(1000);
         }
     }
