@@ -1,13 +1,15 @@
 import express from 'express';
 import Docker from 'dockerode';
 
+let nextSessionId = 2
+
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 const createdContainers: Docker.Container[] = [];
 async function listAndStartContainers() {
     try {
         // List only running containers
         const containers = await docker.listContainers({ all: false });
-        console.log('Running Containers:', containers);
+        // console.log('Running Containers:', containers);
         // If you want to print more details about each container
         for (const containerInfo of containers) {
             console.log(`Container ID: ${containerInfo.Id}`);
@@ -30,12 +32,14 @@ async function listAndStartContainers() {
         // }
         const newcontainer = await docker.createContainer({
             Image: 'session-run:latest',
-            name: `session-${createdContainers.length}`,
-            // Cmd: [	'node', '--inspect=0.0.0.0:9229', '--nolazy', './.dist/session-manager.js'],
+            name: `session-${nextSessionId}`,
+            Cmd: [	'node', './session/session.js', `port=${10100 + nextSessionId}`, `session-id=${nextSessionId}`],
+            // Shell: [	'port=10123', 'session-id=123'],
             HostConfig: {
                 NetworkMode: 'dockertest_my_network'
             }
         });
+        nextSessionId++;
         createdContainers.push(newcontainer);
         await newcontainer.start();
         console.log('Started a new instance of the container:', newcontainer.id);

@@ -1,3 +1,5 @@
+import express from 'express';
+import { Args } from '../util';
 import { FooA } from "./foo-a";
 
 class Session {
@@ -31,7 +33,23 @@ process.on('SIGTERM', function() {
     process.exit();
 });
 
+console.log('ARGS ', process.argv)
 
-// main
-const session = new Session(new Date().getTime().toString());
-session.run();
+const args = new Args()
+const app = express();
+const sessionId = Number(args.value('session-id', 1))
+const port = Number(args.value('port', 11090))
+
+// console.log(`JKJKJK******Session (${sessionId}), listening on http://localhost:${port}`);
+// const session = new Session('')
+// session.run();
+
+app.get('/', (req, res) => {
+    res.sendStatus(200);
+    // console.log(`${new Date().toLocaleTimeString()} - request - ${XYZ}`)
+    // res.send(`${new Date().toLocaleTimeString()} - Hello - ${XYZ}`);
+});
+
+app.listen(port, () => {
+    console.log(`Session (${sessionId}), listening on http://localhost:${port}`);
+});

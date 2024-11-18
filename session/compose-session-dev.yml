@@ -14,6 +14,6 @@ services:
 
     ports:
       - 9230:9229
-    command: node --inspect=0.0.0.0:9229 --nolazy ./.dist/session.js
+    command: node --inspect=0.0.0.0:9229 --nolazy ./.dist/session/session.js session-id=11 port=10011
 
 # docker run --rm --name session-dev -p 9230:9229 -v .:/app session-dev node --inspect=0.0.0.0:9229 --nolazy ./.dist/session.js

@@ -5,4 +5,4 @@ COPY package*.json .
 RUN npm install --production
 COPY .dist .
 
-CMD ["node", "session.js"]
+CMD ["node", "session/session.js"]

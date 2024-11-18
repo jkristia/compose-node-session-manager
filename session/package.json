@@ -3,9 +3,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "dockerode": "^4.0.2"
+    "dockerode": "^4.0.2",
+    "express": "^4.21.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/node": "^22.9.0"
   }
 }

@@ -19,7 +19,7 @@ run-session: .build-session-dev ## run instance of session (debug port 9230)
 	docker run --rm --name session-dev \
 		-p 9230:9229 \
 		-v .:/app session-dev \
-		node --inspect=0.0.0.0:9229 --nolazy ./.dist/session.js
+		node --inspect=0.0.0.0:9229 --nolazy ./.dist/session/session.js session-id=10 port=10010
 
 
 .build-session-dev:
