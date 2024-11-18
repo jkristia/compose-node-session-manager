@@ -8,9 +8,16 @@ services:
     extends:
       file: ./session/compose-session-dev.yml
       service: session
+    networks:
+      - my_network
 
   manager:
     extends:
       file: ./session-manager/compose-manager-dev.yml
       service: manager
+    networks:
+      - my_network
 
+networks:
+  my_network:
+    driver: bridge

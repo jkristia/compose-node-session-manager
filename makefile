@@ -25,11 +25,17 @@ run-session: .build-session-dev ## run instance of session (debug port 9230)
 .build-session-dev:
 	cd session && \
 	tsc && \
-	docker build -f dockerfile-dev -t session-dev . 
+	docker build -f dockerfile-dev -t session-dev .
+.build-session-run:
+	cd session && \
+	tsc && \
+	docker build -f dockerfile-run -t session-run .
+
+
 
 .build-session-manager-dev:
 	cd session-manager && \
 	npm run build && \
 	docker build -f dockerfile-dev -t manager-dev . 
 
-.build-image: .build-session-dev .build-session-manager-dev
+.build-image: .build-session-dev .build-session-run .build-session-manager-dev

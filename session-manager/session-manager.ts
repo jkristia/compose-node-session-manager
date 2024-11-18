@@ -2,7 +2,7 @@ import express from 'express';
 import Docker from 'dockerode';
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
-
+const createdContainers: Docker.Container[] = [];
 async function listAndStartContainers() {
     try {
         // List only running containers
@@ -28,18 +28,42 @@ async function listAndStartContainers() {
         //         console.log(`Started container ${containerInfo.Id}`);
         //     }
         // }
+        const newcontainer = await docker.createContainer({
+            Image: 'session-run:latest',
+            name: `session-${createdContainers.length}`,
+            // Cmd: [	'node', '--inspect=0.0.0.0:9229', '--nolazy', './.dist/session-manager.js'],
+            HostConfig: {
+                NetworkMode: 'dockertest_my_network'
+            }
+        });
+        createdContainers.push(newcontainer);
+        await newcontainer.start();
+        console.log('Started a new instance of the container:', newcontainer.id);
     } catch (error) {
         console.error('Error:', error);
     }
 }
 
+async function stopAllCreatedContainers() {
+    for (const container of createdContainers) {
+        try {
+            await container.stop();
+            await container.remove();
+            console.log('Stopped container:', container.id);
+        } catch (error) {
+            console.error('Failed to stop container:', container.id, error);
+        }
+    }
+}
 
-process.on('SIGINT', function () {
+process.on('SIGINT', async () => {
     console.log("CTRL-C: will terminate");
+    await stopAllCreatedContainers();
     process.exit();
 });
-process.on('SIGTERM', function () {
+process.on('SIGTERM', async () => {
     console.log("SIGTERM: will terminate");
+    await stopAllCreatedContainers();
     process.exit();
 });
 
