@@ -7,36 +7,22 @@ const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 const createdContainers: Docker.Container[] = [];
 async function listAndStartContainers() {
     try {
+        const networks = await docker.listNetworks();
+        const network = networks.find( n => n.Name.endsWith('my_network'))
         // List only running containers
         const containers = await docker.listContainers({ all: false });
-        // console.log('Running Containers:', containers);
-        // If you want to print more details about each container
         for (const containerInfo of containers) {
-            console.log(`Container ID: ${containerInfo.Id}`);
-            console.log(`Container Name: ${containerInfo.Names.join(', ')}`);
-            console.log(`Container Image: ${containerInfo.Image}`);
-            console.log(`Container State: ${containerInfo.State}`);
-            console.log('-----------------------------');
+            console.log(`ID     : ${containerInfo.Id}`);
+            console.log(`  Name : ${containerInfo.Names.join(', ')}`);
+            console.log(`  Image: ${containerInfo.Image}`);
+            console.log(`  State: ${containerInfo.State}`);
         }
-        // List all containers
-        // const containers = await docker.listContainers({ all: true });
-        // console.log('Containers:', containers);
-
-        // Start each stopped container
-        // for (const containerInfo of containers) {
-        //     if (!containerInfo.State.includes('running')) {
-        //         const container = docker.getContainer(containerInfo.Id);
-        //         await container.start();
-        //         console.log(`Started container ${containerInfo.Id}`);
-        //     }
-        // }
         const newcontainer = await docker.createContainer({
             Image: 'session-run:latest',
             name: `session-${nextSessionId}`,
-            Cmd: [	'node', './session/session.js', `port=${10100 + nextSessionId}`, `session-id=${nextSessionId}`],
-            // Shell: [	'port=10123', 'session-id=123'],
+            Cmd: ['node', './session/session.js', `port=${10100 + nextSessionId}`, `session-id=${nextSessionId}`],
             HostConfig: {
-                NetworkMode: 'dockertest_my_network'
+                NetworkMode: network?.Name
             }
         });
         nextSessionId++;
