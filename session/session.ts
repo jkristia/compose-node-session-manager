@@ -14,7 +14,7 @@ class Session {
             })
         }
         while (true) {
-            console.log(`${new Date().toLocaleTimeString()} Session: ${this._id}`)
+            // console.log(`${new Date().toLocaleTimeString()} Session: ${this._id}`)
             const f = new FooA(this._cnt.toString())
             this._cnt++;
             await sleep(1000);

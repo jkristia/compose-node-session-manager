@@ -7,7 +7,7 @@ export class FooA {
 
     private foo(s: string) {
         setTimeout(() => {
-            console.log(`FooA(${s}) - done ${new Date().toLocaleString()}`)
+            // console.log(`FooA(${s}) - done ${new Date().toLocaleString()}`)
         }, 1100);
     }
 
