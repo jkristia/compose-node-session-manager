@@ -10,5 +10,5 @@ POST {{host}}/create
 POST {{host}}/kill
 
 ###
-GET {{host}}/session/3/ping
+GET {{host}}/session/1/ping
 

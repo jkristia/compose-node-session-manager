@@ -34,6 +34,7 @@ class Session {
 			console.log(`Session ${this._id}, no container`)
 			return;
 		}
+		console.log(`Stopping and removing session ${this._id}`)
 		const info = await container.inspect();
 		if (info.State.Running) {
 			await container.stop();
@@ -107,8 +108,10 @@ class SessionManager {
 	}
 	public async removeAllCreatedSessions() {
 		const pending: Promise<any>[] = [];
+		const remainingSessions: Session[] = [];
 		for (const session of this._sessions) {
 			if (!session.container) {
+				remainingSessions.push(session)
 				continue;
 			}
 			pending.push(session.remove(this._docker));
@@ -116,7 +119,7 @@ class SessionManager {
 		console.log(`Stopping ${pending.length} sessions`)
 		await Promise.all(pending);
 		console.log(`Stopping ${pending.length} sessions: Done`)
-		this._sessions = [];
+		this._sessions = remainingSessions;
 	}
 	public async list(): Promise<ISessionInfo[]> {
 		const containers = await this._docker.listContainers({ all: true });
@@ -163,7 +166,7 @@ app.use('/session/:id', (req, res, next) => {
 		res.status(404).send(`session ${req.params.id} not found`)
 		return
 	}
-	const target = `http://session-${sessionId}:${session.port}`; // Replace 'port' with the actual port number
+	const target = `http://session-${sessionId}:${session.port}`;
 	const proxyMiddleware = createProxyMiddleware({
 		target,
 		changeOrigin: true,
