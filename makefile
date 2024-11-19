@@ -6,6 +6,7 @@ build-image: .build-image	## build image
 
 PHONE: compose-run
 compose-run: ## bring docker compose up
+	# if running in WSL and compose is not installed, then remember to run docker-desktop
 	docker compose -f system-compose-dev.yml up
 
 PHONY: run-manager

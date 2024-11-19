@@ -1,8 +1,10 @@
+
+@host = http://localhost:8080
 ###
-GET http://localhost:8080
+GET {{host}}
 
 ###
-POST http://localhost:8080/create
+POST {{host}}/create
 
 ###
-POST http://localhost:8080/kill
+POST {{host}}/kill
