@@ -9,15 +9,17 @@ services:
       file: ./session/compose-session-dev.yml
       service: session
     networks:
-      - my_network
+      - sys-network
 
   manager:
     extends:
       file: ./session-manager/compose-manager-dev.yml
       service: manager
+    depends_on:
+      - session
     networks:
-      - my_network
+      - sys-network
 
 networks:
-  my_network:
+  sys-network:
     driver: bridge
