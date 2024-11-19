@@ -14,6 +14,9 @@ class Session {
     public get container(): Docker.Container | undefined {
         return this._container;
     }
+    public get info(): Docker.ContainerInfo {
+        return this._info;
+    }
     constructor(
         private _id: number,
         private _info: Docker.ContainerInfo,
@@ -22,6 +25,10 @@ class Session {
     }
 }
 
+export interface ISessionInfo {
+    id: number;
+    state: '' | 'running'
+}
 class SessionManager {
     private fixedSessionName = 'session-1';
     private sessionImage = 'session-run:latest';
@@ -31,7 +38,6 @@ class SessionManager {
     constructor() {
         this.addInitialSession()
     }
-
     private async addInitialSession() {
         const container = await this.findContainer(this.fixedSessionName);
         if (container) {
@@ -51,7 +57,7 @@ class SessionManager {
         // console.log(container)
         return container;
     }
-    public async createSession() {
+    public async createSession(): Promise<ISessionInfo | undefined> {
         try {
             const networks = await this._docker.listNetworks();
             const network = networks.find(n => n.Name.endsWith('sys-network'))
@@ -66,9 +72,13 @@ class SessionManager {
                 }
             });
             await newcontainer.start();
-            const info = await this.findContainer(sessionContainerName)
+            const info = await this.findContainer(sessionContainerName);
             this._sessions.push(new Session(sessionId, info!, newcontainer))
             console.log('Started new session:', sessionId);
+            return {
+                id: sessionId,
+                state: info?.State || '' as any,
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -86,6 +96,23 @@ class SessionManager {
                 console.error('Failed to stop container:', session.id, session.container.id, error);
             }
         }
+    }
+    public async list(): Promise<ISessionInfo[]> {
+        const containers = await this._docker.listContainers({ all: true });
+        // update sessions, if session is not in running list, then it should be removed
+        this._sessions.forEach( session => {
+            const container = containers.find(c => c.Id === session.containerId);
+            console.log(`session ${session.id}`, container?.State);
+            if (!container) {
+                console.log('NOT RUNNING - TO REMOVE ', session.id)
+            }
+        })
+        return this._sessions.map( session => {
+            return {
+                id: session.id,
+                state: session.info.State as any,
+            }
+        })
     }
 }
 
@@ -107,11 +134,17 @@ process.on('SIGTERM', async () => {
 const app = express();
 const port = 8080;
 
-app.get('/', (req, res) => {
-    manager.createSession()
+app.get('/', async (req, res) => {
     console.log(`${new Date().toLocaleTimeString()} - request`)
-    res.send(`${new Date().toLocaleTimeString()} - Hello`);
+    // await manager.createSession();
+    const data = await manager.list()
+    res.status(200).send(data);
 });
+app.post('/create', async (req, res)=> {
+    console.log(`${new Date().toLocaleTimeString()} - request`)
+    const data = await manager.createSession()
+    res.status(200).send(data);
+})
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
