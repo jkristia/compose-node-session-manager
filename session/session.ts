@@ -45,9 +45,20 @@ const port = Number(args.value('port', 11090))
 // session.run();
 
 app.get('/', (req, res) => {
-    res.sendStatus(200);
-    // console.log(`${new Date().toLocaleTimeString()} - request - ${XYZ}`)
-    // res.send(`${new Date().toLocaleTimeString()} - Hello - ${XYZ}`);
+    res.status(200).send({
+        session: sessionId,
+        time: new Date().toLocaleTimeString(),
+        info: 'root response',
+        foo: req.body || {}
+    });
+});
+app.get('/ping', (req, res) => {
+    res.status(200).send({
+        session: sessionId,
+        time: new Date().toLocaleTimeString(),
+        info: 'ping response',
+        foo: req.body || {}
+    });
 });
 
 app.listen(port, () => {
