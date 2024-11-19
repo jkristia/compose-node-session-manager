@@ -23,6 +23,19 @@ class Session {
         private _container?: Docker.Container
     ) {
     }
+    public async remove(docker: Docker) {
+        const container = docker.getContainer(this.containerId);
+        if (!container) {
+            console.log(`Session ${this._id}, no container`)
+            return;
+        }
+        const info = await container.inspect();
+        if (info.State.Running) {
+            await container.stop();
+        }
+        await container.remove();
+        this._container = undefined;
+    }
 }
 
 export interface ISessionInfo {
@@ -83,19 +96,18 @@ class SessionManager {
             console.error('Error:', error);
         }
     }
-    public async shutdown() {
+    public async removeAllCreatedSessions() {
+        const pending: Promise<any>[] = [];
         for (const session of this._sessions) {
             if (!session.container) {
                 continue;
             }
-            try {
-                await session.container.stop();
-                await session.container.remove();
-                console.log('Stopped session:', session.id);
-            } catch (error) {
-                console.error('Failed to stop container:', session.id, session.container.id, error);
-            }
+            pending.push(session.remove(this._docker));
         }
+        console.log(`Stopping ${pending.length} sessions`)
+        await Promise.all(pending);
+        console.log(`Stopping ${pending.length} sessions: Done`)
+        this._sessions = [];
     }
     public async list(): Promise<ISessionInfo[]> {
         const containers = await this._docker.listContainers({ all: true });
@@ -120,12 +132,12 @@ const manager = new SessionManager()
 
 process.on('SIGINT', async () => {
     console.log("CTRL-C: will terminate");
-    await manager.shutdown();
+    await manager.removeAllCreatedSessions();
     process.exit();
 });
 process.on('SIGTERM', async () => {
     console.log("SIGTERM: will terminate");
-    await manager.shutdown();
+    await manager.removeAllCreatedSessions();
     process.exit();
 });
 
@@ -144,6 +156,11 @@ app.post('/create', async (req, res)=> {
     console.log(`${new Date().toLocaleTimeString()} - request`)
     const data = await manager.createSession()
     res.status(200).send(data);
+})
+app.post('/kill', async (req, res)=> {
+    console.log(`${new Date().toLocaleTimeString()} - request`)
+    await manager.removeAllCreatedSessions();
+    res.status(200);
 })
 
 app.listen(port, () => {

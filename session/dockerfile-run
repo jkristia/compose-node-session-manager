@@ -1,8 +1,8 @@
 FROM node:18
 
 WORKDIR /app
-COPY package*.json .
-RUN npm install --production
+COPY package.json .
+RUN npm install --omit=dev
 COPY .dist .
 
 CMD ["node", "session/session.js"]
