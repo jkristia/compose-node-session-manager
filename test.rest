@@ -1,7 +1,7 @@
 
 @host = http://localhost:8080
 ###
-GET {{host}}
+GET {{host}}/sessions
 
 ###
 POST {{host}}/create
@@ -9,6 +9,6 @@ POST {{host}}/create
 ###
 POST {{host}}/kill
 
-###
+### can only debug session #1
 GET {{host}}/session/1/ping
 

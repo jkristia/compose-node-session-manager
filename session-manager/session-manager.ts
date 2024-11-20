@@ -139,7 +139,6 @@ class SessionManager {
 		})
 	}
 }
-
 const manager = new SessionManager()
 
 process.on('SIGINT', async () => {
@@ -152,8 +151,6 @@ process.on('SIGTERM', async () => {
 	await manager.removeAllCreatedSessions();
 	process.exit();
 });
-
-
 
 const app = express();
 const port = 8080;
@@ -175,8 +172,10 @@ app.use('/session/:id', (req, res, next) => {
 });
 
 app.get('/', async (req, res) => {
-	console.log(`${new Date().toLocaleTimeString()} - request`)
-	// await manager.createSession();
+	const data = await manager.list()
+	res.status(200).send(data);
+});
+app.get('/sessions', async (req, res) => {
 	const data = await manager.list()
 	res.status(200).send(data);
 });
